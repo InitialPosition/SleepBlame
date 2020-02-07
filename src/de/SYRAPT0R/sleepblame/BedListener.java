@@ -37,6 +37,11 @@ public class BedListener implements Listener {
             return;
         }
 
+        // if this is the first person to sleep, send out a global broadcast
+        if (sleepingList.isEmpty()) {
+            Bukkit.getServer().broadcastMessage(MessageFormat.format(ChatColor.YELLOW + "{0} just went to sleep! Consider getting to a bed soon!", player.getDisplayName()));
+        }
+
         // add the player to the sleeping list
         sleepingList.add(player);
 
@@ -47,7 +52,7 @@ public class BedListener implements Listener {
                 if (!sleepingList.contains(currentPlayer)) {
                     // GOTCHA
                     Logging.consoleLog(MessageFormat.format("{0} is the only player not sleeping! Sending notification...", player.getDisplayName()));
-                    currentPlayer.sendMessage(ChatColor.RED + "You are the only person not sleeping!");
+                    currentPlayer.sendMessage(ChatColor.RED + "You are the only person not sleeping! Please consider getting to a bed or logging off for a second!");
                     break;
                 }
             }
