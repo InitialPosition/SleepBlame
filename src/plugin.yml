@@ -1,0 +1,5 @@
+name: SleepBlame
+version: "1.0.1"
+author: SYRAPT0R
+main: de.SYRAPT0R.sleepblame.Main
+api-version: 1.15
