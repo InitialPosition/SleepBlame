@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.event.world.TimeSkipEvent;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -68,13 +67,5 @@ public class BedListener implements Listener {
 
         // we just remove the person from the sleeping list
         sleepingList.remove(player);
-    }
-
-    @EventHandler
-    public void onTimeSkip(TimeSkipEvent timeSkipEvent) {
-        if (timeSkipEvent.getSkipReason() == TimeSkipEvent.SkipReason.NIGHT_SKIP) {
-            Logging.consoleLog("Everyone slept successfully! Resetting sleeping list...");
-            sleepingList.clear();
-        }
     }
 }
