@@ -2,6 +2,7 @@ package de.SYRAPT0R.sleepblame;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -46,11 +47,19 @@ public class BedListener implements Listener {
 
         // check if only one person remains not sleeping
         if (playerList.size() - sleepingList.size() == 1) {
-            // we got a blame victim! lets find out who it is...
+            // yep, only one person left! lets find out who it is...
             for (Player currentPlayer: playerList) {
                 if (!sleepingList.contains(currentPlayer)) {
                     // GOTCHA
-                    Logging.consoleLog(MessageFormat.format("{0} is the only player not sleeping! Sending notification...", player.getDisplayName()));
+                    // we make sure that the player is not in the nether or the end.
+                    String playerWorldName = currentPlayer.getWorld().getName();
+                    if (playerWorldName.endsWith("_nether") || playerWorldName.endsWith("_end")) {
+                        Logging.consoleLog("Last person awake is not in the overworld, skipping message...");
+                        return;
+                    }
+
+                    // the last player is alive in the overworld, send him a reminder!
+                    Logging.consoleLog(MessageFormat.format("{0} is the only player not sleeping in the overworld! Sending notification...", player.getDisplayName()));
                     currentPlayer.sendMessage(ChatColor.RED + "You are the only person not sleeping! Please consider getting to a bed or logging off for a second!");
                     break;
                 }
