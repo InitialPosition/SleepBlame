@@ -1,9 +1,9 @@
-package de.SYRAPT0R.sleepblame;
+package net.initialposition.sleepblame;
 
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Main extends JavaPlugin {
+public class SleepBlame extends JavaPlugin {
 
     @Override
     public void onEnable() {

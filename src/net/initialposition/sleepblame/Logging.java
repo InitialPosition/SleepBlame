@@ -1,4 +1,4 @@
-package de.SYRAPT0R.sleepblame;
+package net.initialposition.sleepblame;
 
 import java.text.MessageFormat;
 

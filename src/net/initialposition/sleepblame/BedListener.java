@@ -1,12 +1,14 @@
-package de.SYRAPT0R.sleepblame;
+package net.initialposition.sleepblame;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -31,10 +33,19 @@ public class BedListener implements Listener {
         Collection<? extends Player> playerCollection = Bukkit.getServer().getOnlinePlayers();
         ArrayList<Player> playerList = new ArrayList<>(playerCollection);
 
-        // remove everyone not in the overworld from the player list
+        // make sure only players that meet certain criteria are considered
         for (Player currentPlayer : playerList) {
+
+            // remove everyone not in the overworld from the player list
             String worldName = currentPlayer.getWorld().getName();
             if (worldName.endsWith("_nether") || worldName.endsWith("_end")) {
+                playerList.remove(currentPlayer);
+                continue;
+            }
+
+            // remove everyone not in survival or adventure mode
+            GameMode playerGameMode = player.getGameMode();
+            if (playerGameMode == GameMode.CREATIVE || playerGameMode == GameMode.SPECTATOR) {
                 playerList.remove(currentPlayer);
             }
         }
@@ -59,7 +70,7 @@ public class BedListener implements Listener {
                 if (!sleepingList.contains(currentPlayer)) {
 
                     // found him!
-                    Logging.consoleLog(MessageFormat.format("{0} is the only player not sleeping in the overworld! Sending notification...", player.getDisplayName()));
+                    Logging.consoleLog(MessageFormat.format("{0} is the only player not sleeping in the overworld! Sending notification...", currentPlayer.getDisplayName()));
                     currentPlayer.sendMessage(ChatColor.RED + "You are the only person not sleeping! Please consider getting to a bed or logging off for a second!");
                     break;
                 }
@@ -76,5 +87,17 @@ public class BedListener implements Listener {
 
         // we just remove the person from the sleeping list
         sleepingList.remove(player);
+    }
+
+    @EventHandler
+    public void onDisconnectInBed(PlayerQuitEvent event) {
+        // player that logged out
+        Player player = event.getPlayer();
+
+        // check if player was sleeping (i.e. on the sleeping list) and remove him if he was
+        if (sleepingList.contains(player)) {
+            sleepingList.remove(player);
+            Logging.consoleLog(MessageFormat.format("{0} just logged out while sleeping", player.getDisplayName()));
+        }
     }
 }

@@ -27,3 +27,6 @@ hs_err_pid*
 
 # built artifacts
 out/
+
+# intelliJ
+*.iml
